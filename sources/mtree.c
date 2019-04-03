@@ -356,9 +356,10 @@ print_folder(string *fname, struct FTW *ftwbuf)
 	}
 }
 
-void
-print_things(const char *fpath, int flag, struct FTW *ftwbuf)
+int
+print_mtree(const char *fpath, const struct stat *sb, int flag, struct FTW *ftwbuf)
 {
+	(void) sb;
 	string *fname = new_string(fpath);
 
 	if (flag == FTW_SL)
@@ -369,6 +370,7 @@ print_things(const char *fpath, int flag, struct FTW *ftwbuf)
 	else if (flag == FTW_D || flag == FTW_DP || flag == FTW_DNR)
 		print_folder(fname, ftwbuf);
 	destroy_string(fname);
+	return 0;
 }
 
 void
@@ -425,14 +427,6 @@ print_result(void)
 			print_result_none();
 			break;
 	}
-}
-
-int
-print_mtree(const char *fpath, const struct stat *sb, int flag, struct FTW *ftwbuf)
-{
-	(void) sb;
-	print_things(fpath, flag, ftwbuf);
-	return 0;
 }
 
 void

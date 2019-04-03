@@ -46,9 +46,9 @@ get_filter(int argc, char *argv[])
 			(void) getset_filter(genre);
 			break;
 		case 'l':
+			fil = album;
 			(void) getset_album(strdup(optarg));
 			(void) getset_filter(album);
-			fil = album;
 			break;
 		case 's':
 			fil = song;
