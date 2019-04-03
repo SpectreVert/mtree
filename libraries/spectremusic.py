@@ -2,6 +2,8 @@ import bs4 as bs
 from urllib.request import urlopen, Request
 
 
+default_profile = "1231954082"
+
 class Album(object):
     def __init__(self, album_link, album_title, artist_link, artist_name):
         self.album_link = album_link
@@ -19,7 +21,7 @@ class Album(object):
 def main():
     url_get = urlopen(
             Request(
-                'https://www.deezer.com/us/profile/1231954082/albums',
+                'https://www.deezer.com/us/profile/' + default_profile + '/albums',
                 headers={'User-Agent': 'Mozilla/5.0'})
             )
     soup = bs.BeautifulSoup(url_get, features='html.parser')
