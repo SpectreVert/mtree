@@ -1,8 +1,8 @@
 import bs4 as bs
+import argparse
 from urllib.request import urlopen, Request
 
-
-default_profile = "1231954082"
+#default_profile = "1231954082"
 
 class Album(object):
     def __init__(self, album_link, album_title, artist_link, artist_name):
@@ -12,16 +12,33 @@ class Album(object):
         self.artist = artist_name
 
     def __str__(self):
-        return self.album + ' - ' + self.artist
+        return self.artist + '/' + self.album + '/'
 
     def __repr__(self):
         return "<Album: " + self.album + ' - ' + self.artist + ">"
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Fetch some information from deezer profile.')
+    parser.add_argument('-p', metavar='<profile>', type=str, nargs=1,
+                        help='provide a specific profile to load from.')
+    parser.add_argument('-f', metavar='<file>', type=str, nargs=1,
+                        help='provide a specific file to output to.')
+    args = parser.parse_args()
+
+    if vars(args)['p'] is not None:
+        profile = vars(args)['p'][0]
+    else:
+        profile = '1234567'
+
+    if vars(args)['f'] is not None:
+        outputFile = vars(args)['f'][0]
+    else:
+        outputFile = 'default.dzer'
+
     url_get = urlopen(
             Request(
-                'https://www.deezer.com/us/profile/' + default_profile + '/albums',
+                'https://www.deezer.com/us/profile/' + profile + '/albums',
                 headers={'User-Agent': 'Mozilla/5.0'})
             )
     soup = bs.BeautifulSoup(url_get, features='html.parser')
@@ -39,7 +56,7 @@ def main():
                 )
             )
 
-    with open('favs.txt', 'w') as favs:
+    with open(outputFile, 'w') as favs:
         for album in albums:
             favs.write(str(album) + '\n')
 
