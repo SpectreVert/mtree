@@ -37,7 +37,7 @@ def main():
         profile = '1234567'
 
     if vars(args)['f'] is not None:
-        outputFile = vars(args)['f'][0]
+        outputFile = vars(args)['f'][0] + '.dzer'
     else:
         outputFile = 'default.dzer'
 
