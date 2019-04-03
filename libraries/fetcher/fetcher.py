@@ -17,6 +17,11 @@ class Album(object):
     def __repr__(self):
         return "<Album: " + self.album + ' - ' + self.artist + ">"
 
+def shootUnwantedChars(string):
+    string = string.replace(' ', '_')
+    string = string.replace('\'', '')
+
+    return string
 
 def main():
     parser = argparse.ArgumentParser(description='Fetch some information from deezer profile.')
@@ -58,7 +63,7 @@ def main():
 
     with open(outputFile, 'w') as favs:
         for album in albums:
-            favs.write(str(album) + '\n')
+            favs.write(shootUnwantedChars(str(album) + '\n'))
 
 
 if __name__ == '__main__':
