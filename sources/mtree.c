@@ -250,7 +250,7 @@ print_file_genre(string *fname, struct FTW *ftwbuf)
 			fprintf(stdout, "%s\n", fname->chars + ftwbuf->base);
 		}
 		tabfree(fpath);
-	} else
+	} else if (strstr(fname->chars, getset_genre(0x0)) != 0x0)
 		fprintf(stdout, "%s ", fname->chars);
 }
 

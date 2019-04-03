@@ -98,25 +98,8 @@ fclean:			clean
 debug_line:
 			$(H)printf "|--- $(CB)[INFO]$(CCY) Building debug mode.\n$(CRESET)"
 
-prepare:
-			$(H)printf "$(CB)[INFO]$(CRESET) Preparing folders"
-			$(SLEEP_01)
-			$(H)printf "."
-			$(SLEEP_01)
-			$(H)printf "."
-			$(SLEEP_01)
-			$(H)printf ".\n"
-			$(SLEEP_01)
-			mkdir -p $(INCLUDEF) $(SRCF) $(LIBF) $(BUILDF) $(TESTF)
-			$(H)printf "$(CB)[INFO]$(CRESET) Building main.c file"
-			$(SLEEP_01)
-			$(H)printf "."
-			$(SLEEP_01)
-			$(H)printf "."
-			$(SLEEP_01)
-			$(H)printf ".\n"
-			$(SLEEP_01)
-			echo -ne "/*\n** EPITECH PROJECT, 2018\n** PROJECT_NAME\n** File description:\n** PROJECT_DESCRIPTION\n*/\n\nint main(int argc, char *argv[])\n{\n\treturn 0;\n}\n" > $(SRCF)/main.c
-			$(H)printf "$(CB)[INFO]$(CRESET) All done!\n"
+install:
+			make
+			cp $(NAME) /bin/
 
-.PHONY: clean prepare fclean all re debug debug_line
+.PHONY: clean fclean all re debug debug_line install

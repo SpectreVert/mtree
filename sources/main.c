@@ -75,10 +75,10 @@ main(int argc, char *argv[])
 	filter_t fil = get_filter(argc, argv);
 	string *dir = new_string(0x0);
 
-	if (argc == 1)
+	if (argc == 1 || optind == argc)
 		dir->append("./", dir);
 	else
-		dir->append(argv[argc - 1], dir);
+		dir->append(argv[optind], dir);
 	mtree(dir, fil);
 	return 0;
 }
