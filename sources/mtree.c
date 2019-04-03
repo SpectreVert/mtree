@@ -1,3 +1,20 @@
+/*
+    Copyright (C) 2019 SpectreVert@github.com
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "mtree.h"
 
 inline bool
@@ -115,6 +132,7 @@ print_branches(struct FTW *ftwbuf)
 	}
 }
 
+/* Unused for now. Still there in case I'll make symlinks items possible. */
 void
 print_symlink(const char *fpath, struct FTW *ftwbuf)
 {
@@ -141,7 +159,8 @@ print_symlink(const char *fpath, struct FTW *ftwbuf)
 		buf[len] = 0;
 		break;
 	}
-	fprintf(stdout, "%s -> %s\n", fname->chars + ftwbuf->base, buf);
+	if (is_playlist(get) == no)
+		fprintf(stdout, "%s -> %s\n", fname->chars + ftwbuf->base, buf);
 	free(buf);
 	destroy_string(fname);
 }
@@ -154,7 +173,7 @@ print_file_artist(string *fname, struct FTW *ftwbuf)
 			count_things(fname->chars + ftwbuf->base, add_file);
 			fprintf(stdout, "`--- %s\n", fname->chars + ftwbuf->base);
 		} else
-			fprintf(stdout, "\"%s\" ", fname->chars);
+			fprintf(stdout, "%s ", fname->chars);
 	}
 }
 
@@ -180,7 +199,7 @@ print_file_song(string *fname, struct FTW *ftwbuf)
 	} else if (strstr(to_upper(tmp->chars), to_upper(tmp2->chars)) != 0x0
 	&& is_playlist(get) == yes) {
 		fname->chars = escape_char(fname->chars, 32);
-		fprintf(stdout, "\"%s\" ", fname->chars);
+		fprintf(stdout, "%s ", fname->chars);
 	}
 	destroy_string(tmp);
 	destroy_string(tmp2);
@@ -195,7 +214,7 @@ print_file_none(string *fname, struct FTW *ftwbuf)
 		fprintf(stdout, "%s\n", fname->chars + ftwbuf->base);
 	} else {
 		fname->chars = escape_char(fname->chars, 32);
-		fprintf(stdout, "\"%s \" ", fname->chars);
+		fprintf(stdout, "%s ", fname->chars);
 	}
 }
 
@@ -263,7 +282,8 @@ print_things(const char *fpath, int flag, struct FTW *ftwbuf)
 	string *fname = new_string(fpath);
 
 	if (flag == FTW_SL)
-		print_symlink(fname->chars, ftwbuf);
+		(void) fname;
+		/* print_symlink(fname->chars, ftwbuf); */
 	else if (flag == FTW_F)
 		print_file(fname, ftwbuf);
 	else if (flag == FTW_D || flag == FTW_DP || flag == FTW_DNR)
