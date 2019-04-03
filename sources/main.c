@@ -22,7 +22,8 @@ usage(char *argv[])
 {
 	fprintf(stderr, "Usage: %s <file> [filter] [options]\n\n", argv[0]);
 	fprintf(stderr, "Options:\n\t-p\tprint only items and prepend absolute path to the name.\n\n");
-	fprintf(stderr, "Filters:\n\t-a <artist>\tfilter songs from artist.\n");
+	fprintf(stderr, "Filters:\n\t-a <artist>\tfilter albums and songs from artist.\n");
+	fprintf(stderr, "\t-g <genre>\tfilter subgenres, albums and songs from genre.\n");
 	fprintf(stderr, "\t-s <string>\tfilter songs containing string (non-case-sensitive)\n");
 }
 
@@ -32,7 +33,7 @@ get_filter(int argc, char *argv[])
 	int opt = 0;
 	filter_t fil;
 
-	while ((opt = getopt(argc, argv, "a:g:l:s:p")) != -1) {
+	while ((opt = getopt(argc, argv, "a:g:l:s:ph")) != -1) {
 		switch (opt) {
 		case 'a':
 			fil = artist;
@@ -41,8 +42,12 @@ get_filter(int argc, char *argv[])
 			break;
 		case 'g':
 			fil = genre;
+			(void) getset_genre(strdup(optarg));
+			(void) getset_filter(genre);
 			break;
 		case 'l':
+			(void) getset_album(strdup(optarg));
+			(void) getset_filter(album);
 			fil = album;
 			break;
 		case 's':
@@ -53,6 +58,9 @@ get_filter(int argc, char *argv[])
 		case 'p':
 			(void) is_playlist(yes);
 			break;
+		case 'h':
+			usage(argv);
+			exit(EXIT_SUCCESS);
 		default:
 			usage(argv);
 			exit(EXIT_FAILURE);

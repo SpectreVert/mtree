@@ -54,7 +54,17 @@ tablen(char **tab)
 	size_t i = 0;
 
 	for (; tab[i]; ++i);
-	return i - 1;
+	return i;
+}
+
+size_t
+get_level(char *base_name, char **tab)
+{
+	size_t len = tablen(tab);
+	size_t i = len - 1;
+
+	for (; i > 0 && strcmp(tab[i], base_name) != 0; --i);
+	return len - i - 2;
 }
 
 char **
@@ -77,6 +87,15 @@ strtotab(char *s, char tok)
 	r[t1][t2] = '\0';;
 	r[t1 + 1] = 0x0;
 	return r;
+}
+
+bool
+strintab(const char *s, char **tab)
+{
+	for (unsigned int i = 0; tab[i]; ++i)
+		if (strcmp(tab[i], s) == 0)
+			return true;
+	return false;
 }
 
 void

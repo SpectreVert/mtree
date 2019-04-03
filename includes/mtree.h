@@ -68,5 +68,7 @@ filter_t getset_filter(filter_t f);
 char **strtotab(char *s, char tok);
 void puttab(char **tab);
 size_t tablen(char **tab);
+size_t get_level(char *base_name, char **tab);
 void tabfree(char **tab);
+bool strintab(const char *s, char **tab);
 char *escape_char(char *s, char escape);
