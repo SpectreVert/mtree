@@ -12,7 +12,7 @@ class Album(object):
         self.artist = artist_name
 
     def __str__(self):
-        return self.artist + '/' + self.album + '/'
+        return self.artist + '/' + self.album + '/' + self.album_link.replace('/album/', 'd')
 
     def __repr__(self):
         return "<Album: " + self.album + ' - ' + self.artist + ">"
