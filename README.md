@@ -18,6 +18,7 @@ Options:
 Filters:
    -a <artist>      filter albums and songs from artist.
    -g <genre>       filter subgenres, albums and songs from genre.
+   -m <album>	    filter albums containing string (non case-sensitive)
    -s <string>      filter songs containing string (non case-sensitive)
 ```
 
@@ -63,8 +64,7 @@ Genre, artist and album folders respectively need to start with a **lower case**
 Characters after the first one can be alphanumerical or a dash or hyphen.
 
 Audio items can be named using any character that wouldn't need to be escaped by bash. Spaces, exclamation
-maks, colons should not be used in file names. Best practice would recommend to stick to **alphanumerical characters**
-with the addition of **dash**, **hypens* and **dots**.
+maks and colons, for instance, should be avoided. Best practice would recommend to stick to **alphanumerical characters** with the addition of **dash**, **hypens** and **dots**.
 
 ### Example hierarchy
 

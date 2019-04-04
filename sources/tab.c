@@ -106,7 +106,7 @@ puttab(char **tab)
 }
 
 void
-tabfree(char **tab)
+freetab(char **tab)
 {
 	for (unsigned int i = 0; tab[i]; ++i)
 		free(tab[i]);

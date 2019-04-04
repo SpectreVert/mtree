@@ -203,10 +203,51 @@ print_file_artist(string *fname, struct FTW *ftwbuf)
 			fpath = strtotab(fname->chars, '/');
 			count_things(fname->chars + ftwbuf->base, add_file);
 			print_lonely_branches(get_level(getset_artist(0x0), fpath));
+			freetab(fpath);
 			fprintf(stdout, "%s\n", fname->chars + ftwbuf->base);
 		} else
 			fprintf(stdout, "%s ", fname->chars);
 	}
+}
+
+void
+print_file_genre(string *fname, struct FTW *ftwbuf)
+{
+	char **fpath = 0x0;
+
+	if (is_playlist(get) == no) {
+		fpath = strtotab(fname->chars, '/');
+		if (strintab(getset_genre(0x0), fpath)) {
+			count_things(fname->chars + ftwbuf->base, add_file);
+			print_lonely_branches(get_level(getset_genre(0x0), fpath));
+			fprintf(stdout, "%s\n", fname->chars + ftwbuf->base);
+		}
+		freetab(fpath);
+	} else if (strstr(fname->chars, getset_genre(0x0)) != 0x0)
+		fprintf(stdout, "%s ", fname->chars);
+}
+
+void
+print_file_album(string *fname, struct FTW *ftwbuf)
+{
+	string *tmp = new_string(fname->chars);
+	string *tmp2 = new_string(getset_album(0x0));
+	char **fpath = 0x0;
+
+	fpath = strtotab(to_upper(tmp->chars), '/');
+	if (strstr(tmp->chars, to_upper(tmp2->chars)) != 0x0
+	&& tablen(fpath) >= 1 && strstr(fpath[tablen(fpath) - 2], tmp2->chars)) {		
+		if (is_playlist(get) == no) {
+			fpath = strtotab(fname->chars, '/');
+			count_things(fname->chars + ftwbuf->base, add_file);
+			print_lonely_branches(0);
+			fprintf(stdout, "%s\n", fname->chars + ftwbuf->base);
+		} else
+			fprintf(stdout, "%s ", fname->chars);
+	}
+	freetab(fpath);
+	destroy_string(tmp);
+	destroy_string(tmp2);
 }
 
 void
@@ -227,7 +268,7 @@ print_file_song(string *fname, struct FTW *ftwbuf)
 			path_tab[tablen(path_tab) - 2]);
 		}
 		puts("");
-		tabfree(path_tab);
+		freetab(path_tab);
 	} else if (strstr(to_upper(tmp->chars), to_upper(tmp2->chars)) != 0x0
 	&& is_playlist(get) == yes) {
 		fname->chars = escape_char(fname->chars, 32);
@@ -235,23 +276,6 @@ print_file_song(string *fname, struct FTW *ftwbuf)
 	}
 	destroy_string(tmp);
 	destroy_string(tmp2);
-}
-
-void
-print_file_genre(string *fname, struct FTW *ftwbuf)
-{
-	char **fpath = 0x0;
-
-	if (is_playlist(get) == no) {
-		fpath = strtotab(fname->chars, '/');
-		if (strintab(getset_genre(0x0), fpath)) {
-			count_things(fname->chars + ftwbuf->base, add_file);
-			print_lonely_branches(get_level(getset_genre(0x0), fpath));
-			fprintf(stdout, "%s\n", fname->chars + ftwbuf->base);
-		}
-		tabfree(fpath);
-	} else if (strstr(fname->chars, getset_genre(0x0)) != 0x0)
-		fprintf(stdout, "%s ", fname->chars);
 }
 
 void
@@ -276,6 +300,7 @@ print_file(string *fname, struct FTW *ftwbuf)
 		print_file_genre(fname, ftwbuf);
 		break;
 	case album:
+		print_file_album(fname, ftwbuf);
 		break;
 	case song:
 		print_file_song(fname, ftwbuf);
@@ -302,7 +327,7 @@ print_folder_artist(string *fname, struct FTW *ftwbuf)
 			print_lonely_branches(get_level(getset_artist(0x0), fpath));
 			fprintf(stdout, "%s/\n", fname->chars + ftwbuf->base);
 		}
-		tabfree(fpath);
+		freetab(fpath);
 	}
 }
 
@@ -322,8 +347,24 @@ print_folder_genre(string *fname, struct FTW *ftwbuf)
 			print_lonely_branches(get_level(getset_genre(0x0), fpath));
 			fprintf(stdout, "%s/\n", fname->chars + ftwbuf->base);
 		}
-		tabfree(fpath);
+		freetab(fpath);
 	}
+}
+
+void
+print_folder_album(string *fname, struct FTW *ftwbuf)
+{
+	string *tmp = new_string(fname->chars + ftwbuf->level);
+	string *tmp2 = new_string(getset_album(0x0));
+
+	if (is_playlist(get) != no)
+		return;
+	else if (strstr(to_upper(tmp->chars), to_upper(tmp2->chars)) != 0x0) {
+		count_things(fname->chars + ftwbuf->base, add_folder);
+		fprintf(stdout, "%s/\n", fname->chars + ftwbuf->base);
+	}
+	destroy_string(tmp);
+	destroy_string(tmp2);
 }
 
 void
@@ -347,6 +388,7 @@ print_folder(string *fname, struct FTW *ftwbuf)
 		print_folder_genre(fname, ftwbuf);
 		break;
 	case album:
+		print_folder_album(fname, ftwbuf);
 		break;
 	case song:
 		break;
@@ -391,6 +433,13 @@ print_result_genre(void)
 }
 
 void
+print_result_album(void)
+{
+	fprintf(stdout, "songs: %zd\t", count_things(0x0, query_song));
+	fprintf(stdout, "albums: %zd\n", count_things(0x0, query_album));
+}
+
+void
 print_result_song(void)
 {
 	fprintf(stdout, "songs: %zd\n", count_things(0x0, query_song));
@@ -419,6 +468,7 @@ print_result(void)
 			print_result_genre();
 			break;
 		case album:
+			print_result_album();
 			break;
 		case song:
 			print_result_song();
