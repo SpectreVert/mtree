@@ -17,6 +17,10 @@ class Album(object):
     def __repr__(self):
         return "<Album: " + self.album + ' - ' + self.artist + ">"
 
+def generateFoldersFiels(path):
+    folders = path.split('/')
+    
+
 def shootUnwantedChars(string):
     string = string.replace(' ', '_')
     string = string.replace('\'', '')
@@ -29,6 +33,8 @@ def main():
                         help='provide a specific profile to load from.')
     parser.add_argument('-f', metavar='<file>', type=str, nargs=1,
                         help='provide a specific file to output to.')
+    parser.add_argument('-g', metavar='<path>', type=str, nargs=1,
+                        help='provide a location to build the profile\'s album hierarchy to.')
     args = parser.parse_args()
 
     if vars(args)['p'] is not None:
