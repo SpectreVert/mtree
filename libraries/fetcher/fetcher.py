@@ -1,5 +1,6 @@
 import bs4 as bs
 import argparse
+import os
 from urllib.request import urlopen, Request
 
 #default_profile = "1231954082"
@@ -17,15 +18,25 @@ class Album(object):
     def __repr__(self):
         return "<Album: " + self.album + ' - ' + self.artist + ">"
 
-def generateFoldersFiels(path):
-    folders = path.split('/')
+def generateFoldersFiles(new, path):
+    if not os.path.exists(path):
+        print ('error: provided path \'' + path + '\' not accessible')
+        exit(3)
+
+    folders = new.split('/')
     
+    if os.path.exists(os.path.join(path, folders[0], folders[1])):
+        print ('warning; album already exported: \'' + folders[1] + '\'')
 
-def shootUnwantedChars(string):
-    string = string.replace(' ', '_')
-    string = string.replace('\'', '')
+    print (folders)
 
-    return string
+def shootUnwantedChars(string, path):
+    string = string.replace(' ', '_').replace('\'', '')
+
+    if path is not None:
+        generateFoldersFiles(string, path)
+
+    return string + '\n'
 
 def main():
     parser = argparse.ArgumentParser(description='Fetch some information from deezer profile.')
@@ -46,6 +57,11 @@ def main():
         outputFile = vars(args)['f'][0] + '.dzer'
     else:
         outputFile = 'default.dzer'
+
+    if vars(args)['g'] is not None:
+        generatePath = vars(args)['g'][0]
+    else:
+        generatePath = None
 
     url_get = urlopen(
             Request(
@@ -69,7 +85,7 @@ def main():
 
     with open(outputFile, 'w') as favs:
         for album in albums:
-            favs.write(shootUnwantedChars(str(album) + '\n'))
+            favs.write(shootUnwantedChars(str(album), generatePath))
 
 
 if __name__ == '__main__':
