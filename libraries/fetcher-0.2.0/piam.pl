@@ -13,8 +13,11 @@
 use warnings;
 use strict;
 
+use open ':encoding(UTF-8)';
+
 package PiamParser;
 use base "HTML::Parser";
+use JSON qw( decode_json );
 
 # 1 = allbum
 # 2 = artist
@@ -55,20 +58,6 @@ sub text {
     $pflag = 0;
 }
 
-sub main {
-    my $p = new PiamParser;
-    my $tmp_file = "tmp-" . rand();
-
-    open ($tmp_FILE, '>', $tmp_file) or
-        die "Could not open temp file";
-    $p->parse_file("deezer.html");
-    close $tmp_FILE;
-
-    append_album_dates($tmp_file);
-
-    return 0;
-}
-
 sub is_text_json {
     my $text = pop;
 
@@ -77,8 +66,22 @@ sub is_text_json {
     }
 }
 
-sub append_album_dates {
-    my $old_file = pop;
+sub main {
+    my $p = new PiamParser;
+    my $tmp_file = "tmp-" . rand();
+
+    open ($tmp_FILE, '>', $tmp_file) or
+        die "Could not open temp file";
+    $p->parse_file("deezerpage.html");
+    close $tmp_FILE;
+
+    extract_infos($tmp_file);
+
+    return 0;
+}
+
+sub extract_infos {
+    my $old_file = shift;
     my $tmp_file = "tmp2-" . rand();
 
     open (my $old_FILE, '<', $old_file) or
@@ -88,25 +91,35 @@ sub append_album_dates {
         die "error: could not open temp file";
 
     while (<$old_FILE>) {
-        my @line = split ':';
-        my @album = split ('/', $line[0]);
-        my $year = undef;
-
         if (not $json_text) {
-            die "error: could not extract json information"
-        } elsif ($json_text =~ /"ALB_TITLE":"\Q$album[1]"[.*]"PHYSICAL_RELEASE_DATE":/) {
-            $year = $1;
-            print "got there";
+            die "error: could not extract json information";
+        } else {
+            chomp;
+            append_dates($tmp_FILE, $_);
         }
-
-        chomp $line[1];
-        print ($tmp_FILE "$line[1]:$album[0]/$album[1]\n");
     }
 
     close $old_FILE;
     unlink $old_file;
     close $tmp_FILE;
-    unlink $tmp_file;
+}
+
+sub append_dates {
+    my $tmp_FILE = shift;
+
+    my $dec = decode_json($json_text);
+    my @datas = @{$dec->{'TAB'}{'albums'}{'data'}};
+
+    my @infos = split (':', shift);
+    my @album = split ('/', $infos[0]);
+
+    for my $data (@datas) {
+        if ($data->{'ALB_TITLE'} eq $album[1]) {
+            my @date = split ('-', $data->{'PHYSICAL_RELEASE_DATE'});
+
+            print $tmp_FILE "$infos[1]:$album[0]/$date[0]$album[1]\n";
+        }
+    }
 }
 
 ### Argument parsing
