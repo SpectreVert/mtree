@@ -18,6 +18,7 @@ use open ':encoding(UTF-8)';
 package PiamParser;
 use base "HTML::Parser";
 use JSON qw( decode_json );
+use Getopt::Std;
 
 # 1 = allbum
 # 2 = artist
@@ -25,6 +26,8 @@ use JSON qw( decode_json );
 my $pflag = 0;
 my $json_text = undef;
 my $tmp_FILE = undef;
+
+### Html extraction
 
 sub start {
     my ($self, $tag, $attr, $attrseq, $origtext) = @_;
@@ -51,7 +54,7 @@ sub text {
         print ($tmp_FILE $text . ":");
     } elsif ($pflag == 2) {
         print ($tmp_FILE $text . "\n");
-    } else {
+    }  else {
         is_text_json($text);
     }
 
@@ -65,6 +68,8 @@ sub is_text_json {
         $json_text = $1;
     }
 }
+
+### Fectcher core
 
 sub main {
     my $p = new PiamParser;
@@ -116,47 +121,26 @@ sub append_dates {
     for my $data (@datas) {
         if ($data->{'ALB_TITLE'} eq $album[1]) {
             my @date = split ('-', $data->{'PHYSICAL_RELEASE_DATE'});
+            ($infos[1], $album[1]) = correct_format($infos[1], $album[1]);
 
-            print $tmp_FILE "$infos[1]:$album[0]/$date[0]$album[1]\n";
+            print $tmp_FILE "$infos[1]:$album[0]/$date[0]-$album[1]\n";
         }
     }
 }
 
-### Argument parsing
+### Correcting format
 
-sub checkOpt {
-        for my $arg (@ARGV) {
-                if ($_[0] eq $arg) {
-                        return 1;
-                }
-        }
-        return 0;
-}
+sub correct_format {
+    my ($artist, $album) = @_;
 
-sub getOpt {
-        my @args = @_;
+    $artist =~ tr/a-zA-Z0-9\_\-\//_/cs;
+    $album =~ s/\'/-/g;
+    $album =~ s/ - /-/g;
+    $album =~ s/ /_/g;
+    $album =~ s/\([^)]*\)//g;
+    $album =~ s/[_-]?$//;
 
-        for my $arg (@args) {
-                if (checkOpt($arg) == 1) {
-                        return 1;
-                }
-        }
-        return 0;
-}
-
-sub nextOpt {
-        my @checks = @_;
-
-        for my $check (@checks) {
-                my $count = 0;
-                for my $arg (@ARGV) {
-                        if ($check eq $arg && exists($ARGV[$count + 1])) {
-                                return $ARGV[$count + 1];
-                        }
-                        $count++;
-                }
-        }
-        return;
+   return ($artist, $album);
 }
 
 exit &main;
