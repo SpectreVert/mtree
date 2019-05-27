@@ -25,8 +25,6 @@ CB		=	#\e[1;94m
 CCY		=	#\e[1;96m
 
 SRC		=	$(SRCF)/main.c				\
-			$(SRCF)/mtree.c				\
-			$(SRCF)/tab.c				\
 
 CC		=	gcc
 

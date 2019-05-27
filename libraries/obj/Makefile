@@ -1,28 +1,26 @@
-##
-## EPITECH PROJECT, 2017
-## Makefile
-## File description:
-## make
-##
+## GNU GPL3 2019
+## Costa Bushnaq
+## LIBOBJ
 
-SRC	=	obj_string.c		\
+SRC	=	obj_string.c
 
 OBJ	=	$(SRC:.c=.o)
 
 NAME	=	libobj.a
 
-all:	$(OBJ)
-	ar rc $(NAME) *.o
+CRESET	=
 
-$(NAME):	$(OBJ)
-	ar rc $(NAME) *.o
+.SILENT:
+all:		$(OBJ)
+		@printf "|------- Compiling libobj.a\n$(CRESET)"
+		ar rc $(NAME) *.o
 
 clean:
-	rm -f $(OBJ)
+		rm -f $(OBJ)
 
-fclean:	clean
-	rm -f $(NAME)
+fclean:		clean
+		rm -f $(NAME)
 
-re:	fclean all
+re:		fclean all
 
-.PHONY: all clean fclean re
+.PHONY:		all clean fclean re

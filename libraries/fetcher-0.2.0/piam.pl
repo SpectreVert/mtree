@@ -109,7 +109,7 @@ sub extract_infos {
     close $old_FILE;
     unlink $old_file;
     close $tmp_FILE;
-    
+
     create_tree($tmp_file, $dest);
 }
 
@@ -147,12 +147,15 @@ sub create_tree {
         my @album = split ('/', $infos[1]);
 
         chomp $album[1];
-        print "$artist[1]/$album[1]/$album[0]\n";
 
         make_path("$artist[1]/$album[1]", {
             verbose => 1,
             chmod => 0755,
         });
+
+        open (my $album_FILE, '>', "$artist[1]/$album[1]/$album[0].link.dzr") or
+            die "error: could not open album file (writing)";
+        close $album_FILE;
     }
 
     close $tmp_FILE;
