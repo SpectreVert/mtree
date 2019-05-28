@@ -47,6 +47,6 @@ typedef struct filter_s {
 } filter_t;
 
 void mtree(string *dir, filter_t fil);
-bool in_extensions(string *fname);
+bool in_extensions(char *fname);
 
 char *get_next_line(int fd);

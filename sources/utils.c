@@ -44,10 +44,10 @@ load_extensions(char *fname)
 }
 
 bool
-in_extensions(string *fname)
+in_extensions(char *fname)
 {
     static char **exts = 0x0;
-    char *fext = strrchr(fname->get(fname), '.');
+    char *fext = strrchr(fname, '.');
 
     if (!exts)
         exts = load_extensions(EXT_FILE);

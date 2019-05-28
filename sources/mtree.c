@@ -15,32 +15,29 @@
 #include <mtree.h>
 
 /* Note:
-** Now it's relatively easy to check for extensions
+** Now it's really convenient to check for extensions
 ** and filter out unwanted files. User adds prefered
 ** extensions in '.mtree' file which will be loaded
-** at the start.
+** at launch.
 */
 
 void
 assess_file(string *fname, struct FTW *ftwbuf)
 {
-    string *buf = 0x0;
-    char *ls = strrchr(fname->get(fname), '/');
+    char *file = strrchr(fname->get(fname), '/');
 
     (void) ftwbuf;
-    if (ls) {
-        buf = new_string(ls + 1);
-        if (in_extensions(buf)) {
-            fname->puts(fname);
-        }
-        destroy_string(buf);
+    if (file && in_extensions(file + 1)) {
+        fname->puts(fname);
     }
 }
 
 /* Note: 
 ** Contrary to previous version it is irrelevant if
 ** we find ourselves in a folder, the interesting
-** stuff happens when we find a file.
+** stuff happens when we find a file: we can
+** backtrace the folders using the whole filepath
+** provided by nftw.
 ** This not only removes a lot of previously useless
 ** operations but also simplifies the process.
 */
@@ -70,6 +67,7 @@ mtree(string *dir, filter_t fil)
     (void) dir;
     (void) fil;
 
+    dir->puts(dir);
     (void) nftw(dir->get(dir), travel_mtree, MAX_FDS, FTW_PHYS);
     display_mtree();
 }

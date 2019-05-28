@@ -28,12 +28,6 @@ usage(char *argv[])
     fprintf(stderr, "\t-s <string>\tfilter songs containing string (non case-sensitive)\n");
 }
 
-/*
-** Filters command-line arguments and returns
-** a function containing optional command-line
-** filter for later display.
-*/
-
 filter_t
 get_filter(int argc, char *argv[])
 {
