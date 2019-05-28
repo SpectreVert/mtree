@@ -15,7 +15,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "mtree.h"
+#include <mtree.h>
 
 void
 usage(char *argv[])
@@ -28,27 +28,34 @@ usage(char *argv[])
     fprintf(stderr, "\t-s <string>\tfilter songs containing string (non case-sensitive)\n");
 }
 
+/*
+** Filters command-line arguments and returns
+** a function containing optional command-line
+** filter for later display.
+*/
+
 filter_t
 get_filter(int argc, char *argv[])
 {
     int opt = 0;
-    filter_t fil;
+    filter_t fil = {0x0, 0x0, 0x0, 0x0, false};
 
     while ((opt = getopt(argc, argv, "a:g:m:s:ph")) != -1) {
         switch (opt) {
         case 'a':
-            fil = artist;
+            fil.art = new_string(optarg);
             break;
         case 'g':
-            fil = genre;
+            fil.gen = new_string(optarg);
             break;
         case 'm':
-            fil = album;
+            fil.alb = new_string(optarg);
             break;
         case 's':
-            fil = song;
+            fil.son = new_string(optarg);
             break;
         case 'p':
+            fil.playlist = true;
             break;
         case 'h':
             usage(argv);
@@ -71,6 +78,6 @@ main(int argc, char *argv[])
         dir->append(dir, "./");
     else
         dir->append(dir, argv[optind]);
-    puts(dir->get(dir));
+    mtree(dir, fil);
     return 0;
 }
