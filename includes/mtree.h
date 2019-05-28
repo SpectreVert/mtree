@@ -24,12 +24,17 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <ftw.h>
-#include <stdint.h>
-#include <ctype.h>
+#include <sys/types.h>
+#include <fcntl.h>
 
 /* Maximum number of open file descriptors. */
 #ifndef	MAX_FDS
 #define MAX_FDS 15
+#endif
+
+/* Default location for extension configuration file. */
+#ifndef EXT_FILE
+#define EXT_FILE "./config/.mtree"
 #endif
 
 /* Keep track of what has to be filtered for display. */
@@ -42,3 +47,6 @@ typedef struct filter_s {
 } filter_t;
 
 void mtree(string *dir, filter_t fil);
+bool in_extensions(string *fname);
+
+char *get_next_line(int fd);

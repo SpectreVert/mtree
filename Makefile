@@ -26,6 +26,7 @@ CCY		=	#\e[1;96m
 
 SRC		=	$(SRCF)/main.c			\
 			$(SRCF)/mtree.c			\
+			$(SRCF)/utils.c			\
 
 CC		=	gcc
 
@@ -44,9 +45,9 @@ DBUG_WARNINGS	=	-Werror				\
 
 DFLAGS		+=	-g -D DEBUG
 
-CFLAGS		+=	-I $(INCLUDEF) -I $(LIBF)/obj -fPIC $(CAZU_WARNINGS)
+CFLAGS		+=	-I $(INCLUDEF) -I $(LIBF)/gnl -I $(LIBF)/obj -fPIC $(CAZU_WARNINGS)
 
-LFLAGS		+=	-L $(LIBF)/obj -lobj -lncurses
+LFLAGS		+=	-L $(LIBF)/obj -L $(LIBF)/gnl -lobj -lgnl -lncurses
 
 OBJS		=	$(patsubst $(SRCF)/%.c, $(BUILDF)/%.o, $(SRC))
 
@@ -59,6 +60,7 @@ $(BUILDF)/$(NAME):	$(OBJS)
 			$(H)printf " and $(CR)librairies$(CRESET)\n"
 			$(H)printf "$(CRESET)"
 			make -C $(LIBF)/obj 
+			make -C $(LIBF)/gnl 
 			$(H) $(CC) -o $(BUILDF)/$(NAME) $(OBJS) $(LFLAGS)
 
 $(BUILDF)/%.o:		$(SRCF)/%.c
@@ -83,6 +85,7 @@ clean:
 			$(H)printf "|--- $(CY)Cleaning objects.$(CRESET)\n"
 			$(H)rm -rf $(OBJS)
 			make -C $(LIBF)/obj clean
+			make -C $(LIBF)/gnl clean
 
 fclean:			clean
 			$(H)printf "|--- $(CY)Cleaning binaries.$(CRESET)\n"
@@ -90,6 +93,7 @@ fclean:			clean
 			$(H)rm -f $(NAME)
 			$(H)rm -f $(NAME)
 			make -C $(LIBF)/obj fclean
+			make -C $(LIBF)/gnl fclean
 
 debug_line:
 			$(H)printf "|--- $(CB)[INFO]$(CCY) Building debug mode.\n$(CRESET)"

@@ -46,5 +46,5 @@ typedef struct string_t {
 	void (*destroy)(struct string_t *t);
 } string;
 
-string *new_string(char *chars);
+string *new_string(const char *chars);
 void destroy_string(string *old);

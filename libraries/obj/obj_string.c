@@ -254,7 +254,7 @@ obj_string_destroy(string *self)
 }
 
 string *
-new_string(char *chars)
+new_string(const char *chars)
 {
     string *new = malloc(sizeof(*new));
 
