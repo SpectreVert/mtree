@@ -14,6 +14,79 @@
 
 #include <mtree.h>
 
+extern filter_t filter;
+
+bool
+in_filters(char *tok)
+{
+    if (tok[0] >= 'a' && tok[0] <= 'z') {
+        if (filter.gen &&
+        strcmp(filter.gen->get(filter.gen), tok) == 0)
+            return true;
+        else if (!filter.gen)
+            return true;
+        else
+            return false;
+    } else if (tok[0] >= 'A' && tok[0] <= 'Z') {
+        if (filter.art &&
+        strtok(tok, filter.art->get(filter.art)))
+            return true;
+        else if (!filter.art)
+            return true;
+        else
+            return false;
+    } else if (tok[0] >= '0' && tok[0] <= '9') {
+        if (filter.alb &&
+        strtok(tok, filter.alb->get(filter.alb)))
+            return true;
+        else if (!filter.alb)
+            return true;
+        else
+            return false;
+    }
+    return false;
+}
+
+static int
+cmp_string(const void *s1, const void *s2)
+{
+    return strcmp(*(char *const *) s1, *(char *const *) s2);
+}
+
+static size_t
+arrlen(char **arr)
+{
+    size_t index = 0;
+
+    for (; arr[index]; index++);
+    return index;
+}
+
+void
+sort_files(char **files)
+{
+    qsort(files, arrlen(files), sizeof(char *), cmp_string);
+}
+
+char **
+store_files(char *fname)
+{
+    static char **files = 0x0;
+    static size_t file_count = 0;
+
+    if (fname == 0x0)
+        return files;
+    else if (!files) {
+        files = malloc(sizeof(char *));
+        files[0] = 0x0;
+    }
+    files[file_count] = fname;
+    file_count++;
+    files = realloc(files, (file_count + 1) * sizeof(char *));
+    files[file_count] = 0x0;
+    return files;
+}
+
 char **
 load_extensions(char *fname)
 {

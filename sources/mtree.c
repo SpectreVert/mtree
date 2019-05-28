@@ -14,6 +14,27 @@
 
 #include <mtree.h>
 
+size_t dir_offset = 0;
+filter_t filter;
+
+/* Note:
+** The aim here is to navigate each of the tokens
+** separated by a '/' , the file path separator,
+** and see if the items correspond to the filters.
+*/
+
+bool
+assess_filters(char *fpath)
+{
+    char *tok = 0x0;
+
+    while ((tok = strsep(&fpath, "/")) && fpath) {
+        if (in_filters(tok))
+            return true;
+    }
+    return false;
+}
+
 /* Note:
 ** Now it's really convenient to check for extensions
 ** and filter out unwanted files. User adds prefered
@@ -24,12 +45,14 @@
 void
 assess_file(string *fname, struct FTW *ftwbuf)
 {
-    char *file = strrchr(fname->get(fname), '/');
+    char *fpath = strdup(fname->get(fname) + dir_offset - 1);
+    char *file = fname->get(fname) + ftwbuf->base;
 
     (void) ftwbuf;
-    if (file && in_extensions(file + 1)) {
-        fname->puts(fname);
+    if (file && in_extensions(file + 1) && assess_filters(fpath)) {
+        store_files(strdup(fname->get(fname)));
     }
+    free(fpath);
 }
 
 /* Note: 
@@ -58,7 +81,11 @@ travel_mtree(const char *fpath, const struct stat *sb, int flag, struct FTW *ftw
 void
 display_mtree(void)
 {
+    /*char **test = store_files(0x0);
 
+    sort_files(test);
+    for (size_t index = 0; test[index]; index++)
+        puts(test[index]);*/
 }
 
 void
@@ -67,7 +94,8 @@ mtree(string *dir, filter_t fil)
     (void) dir;
     (void) fil;
 
-    dir->puts(dir);
+    dir_offset = dir->len(dir);
+    filter = fil;
     (void) nftw(dir->get(dir), travel_mtree, MAX_FDS, FTW_PHYS);
     display_mtree();
 }

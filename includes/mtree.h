@@ -18,6 +18,7 @@
 #pragma once
 
 #define _XOPEN_SOURCE 700
+#define _DEFAULT_SOURCE
 
 #include "obj_string.h"
 #include <stdio.h>
@@ -26,6 +27,7 @@
 #include <ftw.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <string.h>
 
 /* Maximum number of open file descriptors. */
 #ifndef	MAX_FDS
@@ -48,5 +50,9 @@ typedef struct filter_s {
 
 void mtree(string *dir, filter_t fil);
 bool in_extensions(char *fname);
+char **store_files(char *fname);
+
+void sort_files(char **files);
+bool in_filters(char *tok);
 
 char *get_next_line(int fd);
