@@ -16,35 +16,31 @@
 
 extern filter_t filter;
 
-bool
-in_filters(char *tok)
+void
+assess_genre(char *tok)
 {
     if (tok[0] >= 'a' && tok[0] <= 'z') {
-        if (filter.gen &&
-        strcmp(filter.gen->get(filter.gen), tok) == 0)
-            return true;
-        else if (!filter.gen)
-            return true;
-        else
-            return false;
-    } else if (tok[0] >= 'A' && tok[0] <= 'Z') {
-        if (filter.art &&
-        strtok(tok, filter.art->get(filter.art)))
-            return true;
-        else if (!filter.art)
-            return true;
-        else
-            return false;
-    } else if (tok[0] >= '0' && tok[0] <= '9') {
-        if (filter.alb &&
-        strtok(tok, filter.alb->get(filter.alb)))
-            return true;
-        else if (!filter.alb)
-            return true;
-        else
-            return false;
+        if (filter.gen && strcmp(filter.gen->get(filter.gen), tok) == 0)
+            filter.gen_found = true;
     }
-    return false;
+}
+
+void
+assess_artist(char *tok)
+{
+    if (tok[0] >= 'A' && tok[0] <= 'Z') {
+        if (filter.art && strstr(tok, filter.art->get(filter.art)))
+            filter.art_found = true;
+    }
+}
+
+void
+assess_album(char *tok)
+{
+    if (tok[0] >= '0' && tok[0] <= '9') {
+        if (filter.alb && strstr(tok, filter.alb->get(filter.alb)))
+            filter.alb_found = true;
+    }
 }
 
 static int
@@ -65,6 +61,8 @@ arrlen(char **arr)
 void
 sort_files(char **files)
 {
+    if (!files || !files[0])
+        return;
     qsort(files, arrlen(files), sizeof(char *), cmp_string);
 }
 

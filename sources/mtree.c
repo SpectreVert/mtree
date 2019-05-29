@@ -26,13 +26,20 @@ filter_t filter;
 bool
 assess_filters(char *fpath)
 {
+    bool ret = true;
     char *tok = 0x0;
 
     while ((tok = strsep(&fpath, "/")) && fpath) {
-        if (in_filters(tok))
-            return true;
+        assess_genre(tok);
+        assess_artist(tok);
+        assess_album(tok);
     }
-    return false;
+    if ((filter.gen && !filter.gen_found) || 
+        (filter.alb && !filter.alb_found) || 
+        (filter.art && !filter.art_found))
+            ret = false;
+    filter.gen_found = filter.alb_found = filter.art_found = false;
+    return ret;
 }
 
 /* Note:
@@ -49,7 +56,7 @@ assess_file(string *fname, struct FTW *ftwbuf)
     char *file = fname->get(fname) + ftwbuf->base;
 
     (void) ftwbuf;
-    if (file && in_extensions(file + 1) && assess_filters(fpath)) {
+    if (file && in_extensions(file) && assess_filters(fpath)) {
         store_files(strdup(fname->get(fname)));
     }
     free(fpath);
@@ -81,11 +88,12 @@ travel_mtree(const char *fpath, const struct stat *sb, int flag, struct FTW *ftw
 void
 display_mtree(void)
 {
-    /*char **test = store_files(0x0);
+    char **test = store_files(0x0);
 
     sort_files(test);
-    for (size_t index = 0; test[index]; index++)
-        puts(test[index]);*/
+    if (test)
+        for (size_t index = 0; test[index]; index++)
+            puts(test[index]);
 }
 
 void

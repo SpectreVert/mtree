@@ -44,6 +44,9 @@ typedef struct filter_s {
 	string *art;
 	string *gen;
 	string *alb;
+	bool art_found;
+	bool alb_found;
+	bool gen_found;
 	string *son;
 	bool playlist;
 } filter_t;
@@ -53,6 +56,8 @@ bool in_extensions(char *fname);
 char **store_files(char *fname);
 
 void sort_files(char **files);
-bool in_filters(char *tok);
+void assess_genre(char *tok);
+void assess_artist(char *tok);
+void assess_album(char *tok);
 
 char *get_next_line(int fd);
