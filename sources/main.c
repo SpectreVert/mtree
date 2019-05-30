@@ -32,7 +32,7 @@ filter_t
 get_filter(int argc, char *argv[])
 {
     int opt = 0;
-    filter_t fil = {0x0, 0x0, 0x0, false, false, false, 0x0, false};
+    filter_t fil = {0x0, 0x0, 0x0, 0x0, false, false, false, false, false};
 
     while ((opt = getopt(argc, argv, "a:g:m:s:ph")) != -1) {
         switch (opt) {

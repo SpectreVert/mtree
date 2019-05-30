@@ -17,20 +17,20 @@
 extern filter_t filter;
 
 void
-assess_genre(char *tok)
-{
-    if (tok[0] >= 'a' && tok[0] <= 'z') {
-        if (filter.gen && strcmp(filter.gen->get(filter.gen), tok) == 0)
-            filter.gen_found = true;
-    }
-}
-
-void
 assess_artist(char *tok)
 {
     if (tok[0] >= 'A' && tok[0] <= 'Z') {
         if (filter.art && strstr(tok, filter.art->get(filter.art)))
             filter.art_found = true;
+    }
+}
+
+void
+assess_genre(char *tok)
+{
+    if (tok[0] >= 'a' && tok[0] <= 'z') {
+        if (filter.gen && strcmp(filter.gen->get(filter.gen), tok) == 0)
+            filter.gen_found = true;
     }
 }
 
@@ -41,6 +41,13 @@ assess_album(char *tok)
         if (filter.alb && strstr(tok, filter.alb->get(filter.alb)))
             filter.alb_found = true;
     }
+}
+
+void
+assess_song(char *tok)
+{
+    if (filter.son && strstr(tok, filter.son->get(filter.son)))
+        filter.son_found = true;
 }
 
 static int

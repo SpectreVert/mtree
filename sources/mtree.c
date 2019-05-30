@@ -34,11 +34,13 @@ assess_filters(char *fpath)
         assess_artist(tok);
         assess_album(tok);
     }
-    if ((filter.gen && !filter.gen_found) || 
-        (filter.alb && !filter.alb_found) || 
-        (filter.art && !filter.art_found))
+    assess_song(tok);
+    if ((filter.art && !filter.art_found) || 
+        (filter.gen && !filter.gen_found) || 
+        (filter.alb && !filter.alb_found) ||
+        (filter.son && !filter.son_found))
             ret = false;
-    filter.gen_found = filter.alb_found = filter.art_found = false;
+    filter.gen_found = filter.alb_found = filter.art_found = filter.son_found = false;
     return ret;
 }
 
