@@ -55,6 +55,7 @@ typedef struct filter_s {
 void mtree(string *dir, filter_t fil);
 bool in_extensions(char *fname);
 char **store_files(char *fname);
+void clean_mtree(string *dir);
 
 void sort_files(char **files);
 void assess_artist(char *tok);

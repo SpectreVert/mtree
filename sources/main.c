@@ -73,6 +73,5 @@ main(int argc, char *argv[])
     else
         dir->append(dir, argv[optind]);
     mtree(dir, fil);
-    /* needs memory release */
     return 0;
 }

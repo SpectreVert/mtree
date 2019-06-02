@@ -58,9 +58,8 @@ assess_file(string *fname, struct FTW *ftwbuf)
     char *file = fname->get(fname) + ftwbuf->base;
 
     (void) ftwbuf;
-    if (file && in_extensions(file) && assess_filters(fpath)) {
+    if (file && in_extensions(file) && assess_filters(fpath))
         store_files(strdup(fname->get(fname)));
-    }
     free(fpath);
 }
 
@@ -108,4 +107,5 @@ mtree(string *dir, filter_t fil)
     filter = fil;
     (void) nftw(dir->get(dir), travel_mtree, MAX_FDS, FTW_PHYS);
     display_mtree();
+    clean_mtree(dir);
 }

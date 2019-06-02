@@ -51,7 +51,7 @@ assess_song(char *tok)
 }
 
 static int
-cmp_string(const void *s1, const void *s2)
+qsort_cmp(const void *s1, const void *s2)
 {
     return strcmp(*(char *const *) s1, *(char *const *) s2);
 }
@@ -70,7 +70,7 @@ sort_files(char **files)
 {
     if (!files || !files[0])
         return;
-    qsort(files, arrlen(files), sizeof(char *), cmp_string);
+    qsort(files, arrlen(files), sizeof(char *), qsort_cmp);
 }
 
 char **
@@ -133,9 +133,22 @@ in_extensions(char *fname)
         return true;
     else if (!fext)
         return false;
-    for (size_t index = 0; exts[index]; index++) {
+    for (size_t index = 0; exts[index]; index++)
         if (strcmp(fext + 1, exts[index]) == 0)
             return true;
-    }
     return false;
+}
+
+void
+clean_mtree(string *dir)
+{
+    destroy_string(dir);
+    if (filter.art)
+        destroy_string(filter.art);
+    if (filter.gen)
+        destroy_string(filter.gen);
+    if (filter.alb)
+        destroy_string(filter.alb);
+    if (filter.son)
+        destroy_string(filter.son);
 }

@@ -36,8 +36,7 @@ CAZU_WARNINGS	=	-W 				\
 			-Wall				\
 			-Wextra				\
 
-DBUG_WARNINGS	=	-Werror				\
-			-Wparentheses			\
+DBUG_WARNINGS	=	-Wparentheses			\
 			-Wsign-compare			\
 			-Wpointer-sign			\
 			-Wuninitialized			\
