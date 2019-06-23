@@ -59,7 +59,7 @@ assess_file(string *fname, struct FTW *ftwbuf)
 
     (void) ftwbuf;
     if (file && in_extensions(file) && assess_filters(fpath))
-        store_files(strdup(fname->get(fname)));
+        (void) store_files(strdup(fname->get(fname)));
     free(fpath);
 }
 
