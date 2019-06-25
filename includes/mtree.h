@@ -62,5 +62,6 @@ void assess_artist(char *tok);
 void assess_genre(char *tok);
 void assess_album(char *tok);
 void assess_song(char *tok);
+bool accept_file(void);
 
 char *get_next_line(int fd);

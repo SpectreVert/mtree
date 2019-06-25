@@ -16,6 +16,17 @@
 
 extern filter_t filter;
 
+bool
+accept_file(void)
+{
+    if ((filter.art && !filter.art_found) || 
+        (filter.gen && !filter.gen_found) || 
+        (filter.alb && !filter.alb_found) ||
+        (filter.son && !filter.son_found))
+        return false;
+    return true;
+}
+
 void
 assess_artist(char *tok)
 {
@@ -142,6 +153,11 @@ in_extensions(char *fname)
 void
 clean_mtree(string *dir)
 {
+    char **files = store_files(0x0);
+
+    for (size_t index = 0; files && files[index]; ++index)
+        free(files[index]);
+    free(files);
     destroy_string(dir);
     if (filter.art)
         destroy_string(filter.art);

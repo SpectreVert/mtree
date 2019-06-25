@@ -35,10 +35,7 @@ assess_filters(char *fpath)
         assess_album(tok);
     }
     assess_song(tok);
-    if ((filter.art && !filter.art_found) || 
-        (filter.gen && !filter.gen_found) || 
-        (filter.alb && !filter.alb_found) ||
-        (filter.son && !filter.son_found))
+    if (!accept_file())
             ret = false;
     filter.gen_found = filter.alb_found = filter.art_found = filter.son_found = false;
     return ret;
@@ -89,12 +86,16 @@ travel_mtree(const char *fpath, const struct stat *sb, int flag, struct FTW *ftw
 void
 display_mtree(void)
 {
-    char **test = store_files(0x0);
+    char **files = store_files(0x0);
 
-    sort_files(test);
-    if (test)
-        for (size_t index = 0; test[index]; index++)
-            puts(test[index]);
+    if (!files) {
+        fprintf(stdout, "No file found\n");
+        return;
+    }
+    sort_files(files);
+    if (filter.playlist)
+        for (size_t index = 0; files[index]; index++)
+            puts(files[index]);
 }
 
 void
