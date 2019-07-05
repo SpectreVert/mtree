@@ -89,7 +89,7 @@ $ tree                                                  $ mtree
         └── Holy_Oysters                                          `--- Holy_Oysters
             └── 2017-Egonomy                                           `--- 2017-Egonomy
                 ├── 0-Egonomy.mp3                                           `--- 0-Egonomy.mp3
-                |   [7 lines removed]                                       `
+                |   [7 lines removed]                                       `    [7 lines removed]
                 └── 8-Drifts.mp3                                            `--- 8-Drifts.mp3
 
 9 directories, 25 files                                 songs: 25       artists: 2
