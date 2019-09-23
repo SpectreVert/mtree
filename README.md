@@ -6,7 +6,7 @@ The twist here is that mtree is made for using directory and file hierarchy as a
 
 ## Usage
 
-If you've never used mtree, I suggest you read the [Abstract](https://github.com/SpectreVert/mtree/tree/master#abstract)
+If you've never used mtree, I suggest you read the [Abstract](#Abstract)
 section to understand how to prepare your folders and files.
 
 ```
